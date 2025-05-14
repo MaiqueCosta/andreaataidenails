@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Andréa Nails - Agendamento</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff0f6;
+    }
+
+    header {
+      background-color: #ff69b4;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .container {
+      margin-top: 30px;
+    }
+
+    .form-label {
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ff69b4;
+      color: white;
+      margin-top: 40px;
+    }
+
+    .btn-custom {
+      background-color: #ff1493;
+      color: white;
+      border: none;
+    }
+
+    .btn-custom:hover {
+      background-color: #ff3399;
+    }
+
+    a {
+      color: white;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Andréa Nails</h1>
+    <p>Manicure profissional com agendamento online</p>
+  </header>
+
+  <div class="container">
+    <h2>Agende seu horário</h2>
+    <form action="https://formsubmit.co/maique.2012@gmail.com" method="POST">
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome</label>
+        <input type="text" class="form-control" id="nome" name="nome" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="telefone" class="form-label">Telefone / WhatsApp</label>
+        <input type="tel" class="form-control" id="telefone" name="telefone" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="servico" class="form-label">Serviço</label>
+        <select class="form-select" id="servico" name="servico" required>
+          <option value="">Selecione</option>
+
+          <optgroup label="BÁSICO">
+            <option>Manicure/Pedicure: R$ 40,00</option>
+            <option>Manicure: R$ 25,00</option>
+            <option>Pedicure: R$ 25,00</option>
+            <option>Esmaltação tradicional: R$ 15,00</option>
+            <option>Esmaltação em gel: R$ 40,00</option>
+            <option>Plástica dos pés: R$ 60,00</option>
+          </optgroup>
+
+          <optgroup label="ALONGAMENTOS">
+            <option>Fibra de vidro: R$ 180,00</option>
+            <option>Gel na tip: R$ 130,00</option>
+            <option>Gel no molde F1: R$ 120,00</option>
+            <option>Soft gel: R$ 100,00</option>
+            <option>Postiça realista: R$ 50,00</option>
+          </optgroup>
+
+          <optgroup label="OUTROS">
+            <option>Manutenção de fibra: R$ 100,00</option>
+            <option>Manutenção de gel: R$ 85,00</option>
+            <option>Banho de gel: R$ 65,00</option>
+            <option>Reposição de unha (un): R$ 10,00</option>
+            <option>Remoção de alongamento: R$ 20,00</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="data" class="form-label">Data</label>
+        <input type="date" class="form-control" id="data" name="data" min="2025-04-15" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="horario" class="form-label">Horário</label>
+        <select class="form-select" id="horario" name="horario" required>
+          <option value="">Selecione</option>
+          <option>09:00</option>
+          <option>10:00</option>
+          <option>11:00</option>
+          <option>13:00</option>
+          <option>14:00</option>
+          <option>15:00</option>
+          <option>16:00</option>
+          <option>17:00</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-custom">Enviar Agendamento</button>
+
+      <!-- Formsubmit config -->
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://andreanails.com/obrigado.html">
+    </form>
+  </div>
+
+  <footer>
+    <p>
+      📍 Atendimentos de Terça a Sábado, das 09h às 18h<br>
+      📞 <a href="https://wa.me/5571992321977" target="_blank">Fale conosco no WhatsApp</a>
+    </p>
+  </footer>
+</body>
+</html>
