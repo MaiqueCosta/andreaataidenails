@@ -74,12 +74,21 @@
           id="telefone"
           name="telefone"
           required
-          maxlength="15"
-          pattern="^\(\d{2}\) 9\d{4}-\d{4}$"
-          placeholder="(71) 99232-1977"
-          title="Digite no formato (71) 99232-1977"
         />
       </div>
+      
+      <script>
+        $(document).ready(function(){
+          $('#telefone').inputmask({
+            mask: '(99) 99999-9999',  // máscara com 11 dígitos (2 do DDD + 9 do celular)
+            placeholder: '_',
+            showMaskOnHover: false,
+            showMaskOnFocus: true,
+            clearIncomplete: true,    // impede o envio se o campo estiver incompleto
+            autoUnmask: true          // retorna só os números quando o form for enviado
+          });
+        });
+      </script>
 
       <div class="mb-3">
         <label for="servico" class="form-label">Serviço</label>
