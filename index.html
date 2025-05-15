@@ -68,27 +68,25 @@
 
       <div class="mb-3">
         <label for="telefone" class="form-label">Telefone / WhatsApp</label>
-        <input
-          type="tel"
-          class="form-control"
-          id="telefone"
-          name="telefone"
-          required
-        />
+        <input type="tel" class="form-control" id="telefone" name="telefone" required maxlength="15">
       </div>
       
       <script>
         $(document).ready(function(){
           $('#telefone').inputmask({
-            mask: '(99) 99999-9999',  // máscara com 11 dígitos (2 do DDD + 9 do celular)
+            mask: '(99) 99999-9999',  // máscara para 11 dígitos no formato (71) 99232-1977
             placeholder: '_',
             showMaskOnHover: false,
             showMaskOnFocus: true,
-            clearIncomplete: true,    // impede o envio se o campo estiver incompleto
-            autoUnmask: true          // retorna só os números quando o form for enviado
+            clearIncomplete: true,
+            onBeforePaste: function (pastedValue, opts) {
+              // Limpa tudo que não for número antes de colar
+              return pastedValue.replace(/\D/g, '');
+            }
           });
         });
       </script>
+      
 
       <div class="mb-3">
         <label for="servico" class="form-label">Serviço</label>
