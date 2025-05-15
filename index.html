@@ -68,25 +68,27 @@
 
       <div class="mb-3">
         <label for="telefone" class="form-label">Telefone / WhatsApp</label>
-        <input type="tel" class="form-control" id="telefone" name="telefone" required maxlength="15">
+        <input 
+          type="tel" 
+          class="form-control" 
+          id="telefone" 
+          name="telefone" 
+          required
+          maxlength="11"
+          pattern="\d{11}"
+          title="Digite exatamente 11 números, somente dígitos."
+        >
       </div>
       
       <script>
-        $(document).ready(function(){
-          $('#telefone').inputmask({
-            mask: '(99) 99999-9999',  // máscara para 11 dígitos no formato (71) 99232-1977
-            placeholder: '_',
-            showMaskOnHover: false,
-            showMaskOnFocus: true,
-            clearIncomplete: true,
-            onBeforePaste: function (pastedValue, opts) {
-              // Limpa tudo que não for número antes de colar
-              return pastedValue.replace(/\D/g, '');
-            }
-          });
+        // Bloquear entrada de caracteres que não sejam números
+        document.getElementById('telefone').addEventListener('input', function (e) {
+          this.value = this.value.replace(/\D/g, ''); // remove tudo que não for dígito
+          if (this.value.length > 11) {
+            this.value = this.value.slice(0, 11); // limita a 11 dígitos
+          }
         });
       </script>
-      
 
       <div class="mb-3">
         <label for="servico" class="form-label">Serviço</label>
