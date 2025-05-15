@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Andréa Nails - Agendamento</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/jquery.inputmask.min.js"></script>
   <style>
@@ -63,32 +63,21 @@
     <form id="formAgendamento" action="https://formsubmit.co/andreataidenails@gmail.com" method="POST">
       <div class="mb-3">
         <label for="nome" class="form-label">Nome</label>
-        <input type="text" class="form-control" id="nome" name="nome" required>
+        <input type="text" class="form-control" id="nome" name="nome" required />
       </div>
 
       <div class="mb-3">
         <label for="telefone" class="form-label">Telefone / WhatsApp</label>
-        <input 
-          type="tel" 
-          class="form-control" 
-          id="telefone" 
-          name="telefone" 
+        <input
+          type="tel"
+          class="form-control"
+          id="telefone"
+          name="telefone"
           required
-          maxlength="11"
-          pattern="\d{11}"
-          title="Digite exatamente 11 números, somente dígitos."
-        >
+          pattern="\(\d{2}\) \d{5}-\d{4}"
+          title="Digite o telefone no formato (99) 99999-9999"
+        />
       </div>
-      
-      <script>
-        // Bloquear entrada de caracteres que não sejam números
-        document.getElementById('telefone').addEventListener('input', function (e) {
-          this.value = this.value.replace(/\D/g, ''); // remove tudo que não for dígito
-          if (this.value.length > 11) {
-            this.value = this.value.slice(0, 11); // limita a 11 dígitos
-          }
-        });
-      </script>
 
       <div class="mb-3">
         <label for="servico" class="form-label">Serviço</label>
@@ -124,7 +113,7 @@
 
       <div class="mb-3">
         <label for="data" class="form-label">Data</label>
-        <input type="date" class="form-control" id="data" name="data" min="2025-04-15" required>
+        <input type="date" class="form-control" id="data" name="data" min="2025-04-15" required />
       </div>
 
       <div class="mb-3">
@@ -145,31 +134,37 @@
       <button type="submit" class="btn btn-custom">Enviar Agendamento</button>
 
       <!-- Formsubmit config -->
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_next" value="https://andreaataidenails.com.br/obrigado.html">
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_next" value="https://andreaataidenails.com.br/obrigado.html" />
     </form>
   </div>
 
   <footer>
     <p>
-      📍 Atendimentos de Terça a Sábado, das 09h às 18h<br>
+      📍 Atendimentos de Terça a Sábado, das 09h às 18h<br />
       📞 <a href="https://wa.me/5571992156634" target="_blank">Fale conosco no WhatsApp</a>
     </p>
   </footer>
 
   <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
       $('#telefone').inputmask({
         mask: '(99) 99999-9999',
         placeholder: '_',
         showMaskOnHover: false,
-        showMaskOnFocus: true
+        showMaskOnFocus: true,
+        greedy: false,
       });
 
-      // Exibir mensagem antes do envio do formulário
-      $('#formAgendamento').on('submit', function(e) {
+      $('#formAgendamento').on('submit', function (e) {
+        // Se quiser, pode validar a máscara aqui também
+        if (!$('#telefone').inputmask("isComplete")) {
+          alert('Por favor, digite o telefone completo no formato (99) 99999-9999.');
+          e.preventDefault();
+          $('#telefone').focus();
+          return false;
+        }
         alert('Obrigado pelo seu contato, seu agendamento foi enviado com sucesso!');
-        // O formulário será enviado normalmente após o alerta
       });
     });
   </script>
