@@ -60,7 +60,7 @@
 
   <div class="container">
     <h2>Agende seu horário</h2>
-    <form action="https://formsubmit.co/andreataidenails@gmail.com" method="POST">
+    <form id="formAgendamento" action="https://formsubmit.co/andreataidenails@gmail.com" method="POST">
       <div class="mb-3">
         <label for="nome" class="form-label">Nome</label>
         <input type="text" class="form-control" id="nome" name="nome" required>
@@ -145,6 +145,12 @@
         placeholder: '_',
         showMaskOnHover: false,
         showMaskOnFocus: true
+      });
+
+      // Exibir mensagem antes do envio do formulário
+      $('#formAgendamento').on('submit', function(e) {
+        alert('Obrigado pelo seu contato, seu agendamento foi enviado com sucesso!');
+        // O formulário será enviado normalmente após o alerta
       });
     });
   </script>
