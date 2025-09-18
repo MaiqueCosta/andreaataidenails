@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Admin - Andréa Nails</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #fff0f6; }
+    header { background-color: #ff69b4; color: white; padding: 20px 0; text-align: center; }
+    .container { margin-top: 30px; }
+    table { background-color: white; }
+    th, td { text-align: center; }
+    footer { text-align: center; padding: 20px; background-color: #ff69b4; color: white; margin-top: 40px; }
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDb-xyAcfPGLlH0UfOYOFBCD8E__CaB8tk",
+      authDomain: "andrenailsdesign.firebaseapp.com",
+      projectId: "andrenailsdesign",
+      storageBucket: "andrenailsdesign.firebasestorage.app",
+      messagingSenderId: "527220434204",
+      appId: "1:527220434204:web:cf5f71320a4d98de6646d9",
+      measurementId: "G-ZJ7P4RJNHZ"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Administração - Andréa Nails</h1>
+    <p>Somente administradores têm acesso a esta página</p>
+  </header>
+
+  <div class="container">
+    <div id="loginContainer">
+      <h3>Login de administrador</h3>
+      <form id="loginForm">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" required />
+        </div>
+        <div class="mb-3">
+          <label for="senha" class="form-label">Senha</label>
+          <input type="password" class="form-control" id="senha" required />
+        </div>
+        <button type="submit" class="btn btn-custom">Entrar</button>
+      </form>
+    </div>
+
+    <div id="adminContent" style="display:none;">
+      <h3>Todos os agendamentos</h3>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Telefone</th>
+            <th>Serviço</th>
+            <th>Data</th>
+            <th>Horário</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="agendamentosTable">
+        </tbody>
+      </table>
+      <button id="logoutBtn" class="btn btn-danger">Sair</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>📍 Atendimentos de Terça a Sábado, das 08h às 17h</p>
+  </footer>
+
+  <script>
+    $(document).ready(function() {
+      const loginForm = $('#loginForm');
+      const loginContainer = $('#loginContainer');
+      const adminContent = $('#adminContent');
+      const agendamentosTable = $('#agendamentosTable');
+      const logoutBtn = $('#logoutBtn');
+
+      // Login
+      loginForm.on('submit', function(e) {
+        e.preventDefault();
+        const email = $('#email').val();
+        const senha = $('#senha').val();
+
+        auth.signInWithEmailAndPassword(email, senha)
+          .then(async userCredential => {
+            const user = userCredential.user;
+            const token = await user.getIdTokenResult();
+            if (token.claims.admin) {
+              loginContainer.hide();
+              adminContent.show();
+              listarAgendamentos();
+            } else {
+              alert('Acesso negado. Você não é administrador.');
+              auth.signOut();
+            }
+          })
+          .catch(error => {
+            console.error(error);
+            alert('Erro no login. Verifique suas credenciais.');
+          });
+      });
+
+      // Logout
+      logoutBtn.on('click', function() {
+        auth.signOut().then(() => {
+          adminContent.hide();
+          loginContainer.show();
+          agendamentosTable.empty();
+        });
+      });
+
+      // Listar todos os agendamentos
+      async function listarAgendamentos() {
+        agendamentosTable.empty();
+        const snapshot = await db.collection('agendamentos')
+                                 .orderBy('data')
+                                 .orderBy('horario')
+                                 .get();
+        snapshot.forEach(doc => {
+          const a = doc.data();
+          agendamentosTable.append(`
+            <tr>
+              <td>${a.nome}</td>
+              <td>${a.telefone}</td>
+              <td>${a.servico}</td>
+              <td>${a.data}</td>
+              <td>${a.horario}</td>
+              <td>${a.status || ''}</td>
+            </tr>
+          `);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
