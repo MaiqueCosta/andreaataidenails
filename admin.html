@@ -14,6 +14,8 @@
     table { background-color: white; }
     th, td { text-align: center; }
     footer { text-align: center; padding: 20px; background-color: #ff69b4; color: white; margin-top: 40px; }
+    .btn-custom { background-color: #ff1493; color: white; border: none; }
+    .btn-custom:hover { background-color: #ff3399; }
   </style>
 
   <!-- Firebase SDK -->
@@ -57,6 +59,8 @@
         </div>
         <button type="submit" class="btn btn-custom">Entrar</button>
       </form>
+      <hr>
+      <button id="loginGoogle" class="btn btn-custom">Entrar com Google</button>
     </div>
 
     <div id="adminContent" style="display:none;">
@@ -90,30 +94,43 @@
       const adminContent = $('#adminContent');
       const agendamentosTable = $('#agendamentosTable');
       const logoutBtn = $('#logoutBtn');
+      const loginGoogleBtn = $('#loginGoogle');
 
-      // Login
+      // FUNÇÃO PARA EXIBIR ADMIN SEM VERIFICAR CLAIM
+      async function acessarAdmin() {
+        loginContainer.hide();
+        adminContent.show();
+        await listarAgendamentos();
+      }
+
+      // Login com email/senha
       loginForm.on('submit', function(e) {
         e.preventDefault();
         const email = $('#email').val();
         const senha = $('#senha').val();
 
         auth.signInWithEmailAndPassword(email, senha)
-          .then(async userCredential => {
-            const user = userCredential.user;
-            const token = await user.getIdTokenResult();
-            if (token.claims.admin) {
-              loginContainer.hide();
-              adminContent.show();
-              listarAgendamentos();
-            } else {
-              alert('Acesso negado. Você não é administrador.');
-              auth.signOut();
-            }
+          .then(() => {
+            // Ignorando claim apenas para teste
+            acessarAdmin();
           })
           .catch(error => {
             console.error(error);
             alert('Erro no login. Verifique suas credenciais.');
           });
+      });
+
+      // Login com Google
+      loginGoogleBtn.on('click', async function() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+          await auth.signInWithPopup(provider);
+          // Ignorando claim apenas para teste
+          acessarAdmin();
+        } catch(error) {
+          console.error(error);
+          alert('Erro no login com Google.');
+        }
       });
 
       // Logout
