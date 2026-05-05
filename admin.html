@@ -6,19 +6,26 @@
   <title>Admin - Andréa Nails</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff1493">
 
   <style>
     body { font-family: Arial, sans-serif; background-color: #fff0f6; }
     header { background-color: #ff69b4; color: white; padding: 20px 0; text-align: center; }
-    .container { margin-top: 30px; }
     table { background-color: white; }
     th, td { text-align: center; }
     footer { text-align: center; padding: 20px; background-color: #ff69b4; color: white; margin-top: 40px; }
     .btn-custom { background-color: #ff1493; color: white; border: none; }
     .btn-custom:hover { background-color: #ff3399; }
+
+    table { font-size: 14px; }
+    @media (max-width: 768px) {
+      table { font-size: 12px; }
+      th, td { padding: 6px; }
+    }
   </style>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
@@ -30,41 +37,37 @@
       projectId: "andrenailsdesign",
       storageBucket: "andrenailsdesign.firebasestorage.app",
       messagingSenderId: "527220434204",
-      appId: "1:527220434204:web:cf5f71320a4d98de6646d9",
-      measurementId: "G-ZJ7P4RJNHZ"
+      appId: "1:527220434204:web:cf5f71320a4d98de6646d9"
     };
 
-    const app = firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
   </script>
 </head>
+
 <body>
   <header>
     <h1>Administração - Andréa Nails</h1>
-    <p>Somente administradores têm acesso a esta página</p>
   </header>
 
-  <div class="container">
+  <div class="container-fluid px-3">
+
     <div id="loginContainer">
-      <h3>Login de administrador</h3>
+      <h3>Login</h3>
       <form id="loginForm">
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" required />
-        </div>
-        <div class="mb-3">
-          <label for="senha" class="form-label">Senha</label>
-          <input type="password" class="form-control" id="senha" required />
-        </div>
-        <button type="submit" class="btn btn-custom">Entrar</button>
+        <input type="email" id="email" class="form-control mb-2" placeholder="Email" required>
+        <input type="password" id="senha" class="form-control mb-2" placeholder="Senha" required>
+        <button class="btn btn-custom">Entrar</button>
       </form>
+
       <hr>
       <button id="loginGoogle" class="btn btn-custom">Entrar com Google</button>
     </div>
 
     <div id="adminContent" style="display:none;">
-      <h3>Todos os agendamentos</h3>
+      <h3>Agendamentos</h3>
+
       <table class="table table-bordered">
         <thead>
           <tr>
@@ -74,96 +77,108 @@
             <th>Data</th>
             <th>Horário</th>
             <th>Status</th>
+            <th>Ações</th>
           </tr>
         </thead>
-        <tbody id="agendamentosTable">
-        </tbody>
+        <tbody id="agendamentosTable"></tbody>
       </table>
+
       <button id="logoutBtn" class="btn btn-danger">Sair</button>
     </div>
+
   </div>
 
   <footer>
-    <p>📍 Atendimentos de Terça a Sábado, das 08h às 17h</p>
+    <p>Atendimento Terça a Sábado</p>
   </footer>
 
-  <script>
-    $(document).ready(function() {
-      const loginForm = $('#loginForm');
-      const loginContainer = $('#loginContainer');
-      const adminContent = $('#adminContent');
-      const agendamentosTable = $('#agendamentosTable');
-      const logoutBtn = $('#logoutBtn');
-      const loginGoogleBtn = $('#loginGoogle');
+<script>
+$(document).ready(function() {
 
-      // FUNÇÃO PARA EXIBIR ADMIN SEM VERIFICAR CLAIM
-      async function acessarAdmin() {
-        loginContainer.hide();
-        adminContent.show();
-        await listarAgendamentos();
-      }
+  const loginForm = $('#loginForm');
+  const loginContainer = $('#loginContainer');
+  const adminContent = $('#adminContent');
+  const agendamentosTable = $('#agendamentosTable');
 
-      // Login com email/senha
-      loginForm.on('submit', function(e) {
-        e.preventDefault();
-        const email = $('#email').val();
-        const senha = $('#senha').val();
+  // 🔓 Liberado sem claim (teste)
+  async function acessarAdmin() {
+    loginContainer.hide();
+    adminContent.show();
+    await listarAgendamentos();
+  }
 
-        auth.signInWithEmailAndPassword(email, senha)
-          .then(() => {
-            // Ignorando claim apenas para teste
-            acessarAdmin();
-          })
-          .catch(error => {
-            console.error(error);
-            alert('Erro no login. Verifique suas credenciais.');
-          });
-      });
+  // Login email
+  loginForm.on('submit', function(e) {
+    e.preventDefault();
 
-      // Login com Google
-      loginGoogleBtn.on('click', async function() {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        try {
-          await auth.signInWithPopup(provider);
-          // Ignorando claim apenas para teste
-          acessarAdmin();
-        } catch(error) {
-          console.error(error);
-          alert('Erro no login com Google.');
-        }
-      });
+    auth.signInWithEmailAndPassword(
+      $('#email').val(),
+      $('#senha').val()
+    )
+    .then(() => acessarAdmin())
+    .catch(err => alert(err.message));
+  });
 
-      // Logout
-      logoutBtn.on('click', function() {
-        auth.signOut().then(() => {
-          adminContent.hide();
-          loginContainer.show();
-          agendamentosTable.empty();
-        });
-      });
+  // Login Google
+  $('#loginGoogle').click(async () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    try {
+      await auth.signInWithPopup(provider);
+      acessarAdmin();
+    } catch(e) {
+      alert(e.message);
+    }
+  });
 
-      // Listar todos os agendamentos
-      async function listarAgendamentos() {
-        agendamentosTable.empty();
-        const snapshot = await db.collection('agendamentos')
-                                 .orderBy('data')
-                                 .orderBy('horario')
-                                 .get();
-        snapshot.forEach(doc => {
-          const a = doc.data();
-          agendamentosTable.append(`
-            <tr>
-              <td>${a.nome}</td>
-              <td>${a.telefone}</td>
-              <td>${a.servico}</td>
-              <td>${a.data}</td>
-              <td>${a.horario}</td>
-              <td>${a.status || ''}</td>
-            </tr>
-          `);
-        });
-      }
+  // Logout
+  $('#logoutBtn').click(() => {
+    auth.signOut();
+    location.reload();
+  });
+
+  // 📋 Listar agendamentos
+  async function listarAgendamentos() {
+    agendamentosTable.empty();
+
+    const snapshot = await db.collection('agendamentos')
+      .orderBy('data')
+      .orderBy('horario')
+      .get();
+
+    snapshot.forEach(doc => {
+      const a = doc.data();
+
+      agendamentosTable.append(`
+        <tr>
+          <td>${a.nome}</td>
+          <td>${a.telefone}</td>
+          <td>${a.servico}</td>
+          <td>${a.data}</td>
+          <td>${a.horario}</td>
+          <td>${a.status || ''}</td>
+          <td>
+            <button class="btn btn-success btn-sm" onclick="atualizarStatus('${doc.id}', 'confirmado')">✔</button>
+            <button class="btn btn-danger btn-sm" onclick="atualizarStatus('${doc.id}', 'cancelado')">✖</button>
+          </td>
+        </tr>
+      `);
     });
-  </script>
+  }
+
+  // 🔥 Atualizar status
+  window.atualizarStatus = async function(id, status) {
+    await db.collection('agendamentos').doc(id).update({ status });
+    listarAgendamentos();
+  }
+
+});
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js');
+}
+</script>
+
 </body>
 </html>
