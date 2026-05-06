@@ -144,7 +144,7 @@ $(document).ready(function() {
   $('#loginGoogle').click(async ()=>{
     const provider = new firebase.auth.GoogleAuthProvider();
     await auth.signInWithPopup(provider);
-    entrarAdmin();
+// NÃO chama entrarAdmin aqui
   });
 
   $('#logoutBtn').click(()=>{
