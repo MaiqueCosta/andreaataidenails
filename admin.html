@@ -20,7 +20,6 @@
   </style>
 
   <script>
-    // 🔥 CONFIG COMPLETO (OBRIGATÓRIO)
     const firebaseConfig = {
       apiKey: "AIzaSyDb-xyAcfPGLlH0UfOYOFBCD8E__CaB8tk",
       authDomain: "andrenailsdesign.firebaseapp.com",
@@ -47,9 +46,10 @@
   <!-- LOGIN -->
   <div id="loginContainer">
     <h3>Login</h3>
+
     <form id="loginForm">
-      <input type="email" id="email" class="form-control mb-2" placeholder="Email" required>
-      <input type="password" id="senha" class="form-control mb-2" placeholder="Senha" required>
+      <input type="email" id="email" class="form-control mb-2" placeholder="Email">
+      <input type="password" id="senha" class="form-control mb-2" placeholder="Senha">
       <button class="btn btn-custom">Entrar</button>
     </form>
 
@@ -131,7 +131,7 @@ $(document).ready(function() {
     listarServicos();
   }
 
-  // 🔥 CONTROLE DE SESSÃO (ESSENCIAL)
+  // 🔥 CONTROLE DE SESSÃO (FIX GOOGLE LOGIN)
   auth.onAuthStateChanged(function(user) {
     if (user) {
       entrarAdmin();
@@ -141,7 +141,7 @@ $(document).ready(function() {
     }
   });
 
-  // LOGIN EMAIL
+  // 🔥 LOGIN EMAIL
   $('#loginForm').submit(function(e){
     e.preventDefault();
 
@@ -151,26 +151,36 @@ $(document).ready(function() {
     ).catch(e => alert(e.message));
   });
 
-  // LOGIN GOOGLE (COM FALLBACK)
+  // 🔥 LOGIN GOOGLE (CORRIGIDO)
   $('#loginGoogle').click(async ()=>{
     const provider = new firebase.auth.GoogleAuthProvider();
 
     try {
       await auth.signInWithPopup(provider);
     } catch (e) {
-      console.error(e);
+      console.warn("Popup falhou, usando redirect...");
       await auth.signInWithRedirect(provider);
     }
   });
+
+  // 🔥 NECESSÁRIO PARA REDIRECT FUNCIONAR
+  auth.getRedirectResult().catch(e => console.error(e));
 
   $('#logoutBtn').click(()=>{
     auth.signOut();
   });
 
-  // AGENDA
+  // =========================
+  // 📅 AGENDA
+  // =========================
   $('#salvarAgenda').click(async ()=>{
     const data = $('#dataAgenda').val();
-    const horarios = $('#horariosAgenda').val().split(',');
+    const horarios = $('#horariosAgenda').val().split(',').map(h => h.trim());
+
+    if (!data || horarios.length === 0) {
+      alert('Preencha corretamente');
+      return;
+    }
 
     await db.collection('agenda').doc(data).set({
       data,
@@ -181,7 +191,9 @@ $(document).ready(function() {
     alert('Agenda salva');
   });
 
-  // SERVIÇOS
+  // =========================
+  // 🧾 SERVIÇOS
+  // =========================
   async function listarServicos(){
     const tabela = $('#tabelaServicos');
     tabela.empty();
@@ -194,10 +206,10 @@ $(document).ready(function() {
       tabela.append(`
         <tr>
           <td>${s.nome}</td>
-          <td>${s.valor}</td>
+          <td>R$ ${s.valor}</td>
           <td>${s.ativo ? 'Ativo' : 'Inativo'}</td>
           <td>
-            <button class="btn btn-warning btn-sm" onclick="toggleServico('${doc.id}', ${s.ativo})">🔄</button>
+            <button class="btn btn-secondary btn-sm" onclick="toggleServico('${doc.id}', ${s.ativo})">🔄</button>
             <button class="btn btn-danger btn-sm" onclick="excluirServico('${doc.id}')">🗑</button>
           </td>
         </tr>
@@ -206,11 +218,22 @@ $(document).ready(function() {
   }
 
   $('#salvarServico').click(async ()=>{
+    const nome = $('#nomeServico').val();
+    const valor = $('#valorServico').val();
+
+    if (!nome || !valor) {
+      alert('Preencha nome e valor');
+      return;
+    }
+
     await db.collection('servicos').add({
-      nome: $('#nomeServico').val(),
-      valor: $('#valorServico').val(),
+      nome,
+      valor,
       ativo: true
     });
+
+    $('#nomeServico').val('');
+    $('#valorServico').val('');
 
     listarServicos();
   });
@@ -221,16 +244,20 @@ $(document).ready(function() {
   }
 
   window.excluirServico = async (id)=>{
-    await db.collection('servicos').doc(id).delete();
-    listarServicos();
+    if (confirm('Excluir serviço?')) {
+      await db.collection('servicos').doc(id).delete();
+      listarServicos();
+    }
   }
 
-  // AGENDAMENTOS
+  // =========================
+  // 📋 AGENDAMENTOS
+  // =========================
   async function listarAgendamentos(){
     const tabela = $('#agendamentosTable');
     tabela.empty();
 
-    const snap = await db.collection('agendamentos').get();
+    const snap = await db.collection('agendamentos').orderBy('data').get();
 
     snap.forEach(doc=>{
       const a = doc.data();
@@ -240,7 +267,7 @@ $(document).ready(function() {
           <td>${a.nome}</td>
           <td>${a.data}</td>
           <td>${a.horario}</td>
-          <td>${a.status}</td>
+          <td>${a.status || ''}</td>
           <td>
             <button onclick="status('${doc.id}','confirmado')">✔</button>
             <button onclick="status('${doc.id}','cancelado')">✖</button>
