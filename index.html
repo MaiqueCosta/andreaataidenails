@@ -10,8 +10,8 @@
   <!-- jQuery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-  <!-- ✅ Inputmask CORRETO -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/jquery.inputmask.min.js"></script>
+  <!-- ✅ INPUTMASK (VERSÃO CERTA MODERNA) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
 
   <style>
     body { font-family: Arial; background-color: #fff0f6; }
@@ -85,8 +85,8 @@
 <script>
 $(document).ready(function () {
 
-  // ✅ TELEFONE FUNCIONANDO
-  $('#telefone').inputmask('(99) 99999-9999');
+  // ✅ INPUTMASK CORRETO (VERSÃO MODERNA)
+  Inputmask({"mask": "(99) 99999-9999"}).mask(document.getElementById("telefone"));
 
   // =========================
   // 🔥 CARREGAR SERVIÇOS
@@ -215,7 +215,6 @@ $(document).ready(function () {
     $('#horario').html('<option value="">Selecione</option>');
   });
 
-  // 🔥 INICIAR
   carregarServicos();
 
 });
