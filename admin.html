@@ -209,8 +209,13 @@ $(document).ready(function() {
           <td>R$ ${s.valor}</td>
           <td>${s.ativo ? 'Ativo' : 'Inativo'}</td>
           <td>
-            <button class="btn btn-secondary btn-sm" onclick="toggleServico('${doc.id}', ${s.ativo})">🔄</button>
-            <button class="btn btn-danger btn-sm" onclick="excluirServico('${doc.id}')">🗑</button>
+            <button class="btn btn-warning btn-sm" onclick="editarServico('${doc.id}', '${s.nome}', '${s.valor}')">✏️</button>
+
+             <button class="btn btn-secondary btn-sm" onclick="toggleServico('${doc.id}', ${s.ativo})">
+               ${s.ativo ? 'Desativar' : 'Ativar'}
+             </button>
+
+  <button class="btn btn-danger btn-sm" onclick="excluirServico('${doc.id}')">🗑</button>
           </td>
         </tr>
       `);
