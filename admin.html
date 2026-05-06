@@ -2,42 +2,28 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin - Andréa Nails</title>
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#ff1493">
-
-  <style>
-    body { font-family: Arial, sans-serif; background-color: #fff0f6; }
-    header { background-color: #ff69b4; color: white; padding: 20px 0; text-align: center; }
-    table { background-color: white; }
-    th, td { text-align: center; }
-    footer { text-align: center; padding: 20px; background-color: #ff69b4; color: white; margin-top: 40px; }
-    .btn-custom { background-color: #ff1493; color: white; border: none; }
-    .btn-custom:hover { background-color: #ff3399; }
-
-    table { font-size: 14px; }
-    @media (max-width: 768px) {
-      table { font-size: 12px; }
-      th, td { padding: 6px; }
-    }
-  </style>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
+  <style>
+    body { background:#fff0f6; }
+    header { background:#ff69b4; color:#fff; padding:20px; text-align:center; }
+    .btn-custom { background:#ff1493; color:#fff; }
+  </style>
+
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyDb-xyAcfPGLlH0UfOYOFBCD8E__CaB8tk",
+      apiKey: "SUA_KEY",
       authDomain: "andrenailsdesign.firebaseapp.com",
-      projectId: "andrenailsdesign",
-      storageBucket: "andrenailsdesign.firebasestorage.app",
-      messagingSenderId: "527220434204",
-      appId: "1:527220434204:web:cf5f71320a4d98de6646d9"
+      projectId: "andrenailsdesign"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -47,305 +33,215 @@
 </head>
 
 <body>
-  <header>
-    <h1>Administração - Andréa Nails</h1>
-  </header>
 
-  <div class="container-fluid px-3">
+<header>
+  <h1>Painel Admin</h1>
+</header>
 
-    <div id="loginContainer">
-      <h3>Login</h3>
-      <form id="loginForm">
-        <input type="email" id="email" class="form-control mb-2" placeholder="Email" required>
-        <input type="password" id="senha" class="form-control mb-2" placeholder="Senha" required>
-        <button class="btn btn-custom">Entrar</button>
-      </form>
+<div class="container mt-4">
 
-      <hr>
-      <button id="loginGoogle" class="btn btn-custom">Entrar com Google</button>
-    </div>
+  <!-- LOGIN -->
+  <div id="loginContainer">
+    <h3>Login</h3>
+    <form id="loginForm">
+      <input type="email" id="email" class="form-control mb-2" placeholder="Email" required>
+      <input type="password" id="senha" class="form-control mb-2" placeholder="Senha" required>
+      <button class="btn btn-custom">Entrar</button>
+    </form>
 
+    <hr>
+    <button id="loginGoogle" class="btn btn-custom">Entrar com Google</button>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="adminContent" style="display:none;">
+
+    <!-- AGENDA -->
     <h3>Controle de Agenda</h3>
 
-<div class="row mb-3">
-  <div class="col-md-3">
-    <input type="date" id="dataAgenda" class="form-control">
-  </div>
-
-  <div class="col-md-6">
-    <input type="text" id="horariosAgenda" class="form-control" placeholder="Ex: 09:00,10:00,14:00">
-  </div>
-
-  <div class="col-md-3">
-    <button id="salvarAgenda" class="btn btn-custom w-100">Salvar Agenda</button>
-  </div>
-</div>
-
-    <div id="adminContent" style="display:none;">
-      <h3>Agendamentos</h3>
-
-      <h3>Gerenciar Serviços</h3>
-
-<div class="row mb-3">
-  <div class="col-md-5">
-    <input id="nomeServico" class="form-control" placeholder="Nome do serviço">
-  </div>
-  <div class="col-md-3">
-    <input id="valorServico" class="form-control" placeholder="Valor (ex: 50)">
-  </div>
-  <div class="col-md-2">
-    <button id="salvarServico" class="btn btn-custom w-100">Salvar</button>
-  </div>
-</div>
-
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Serviço</th>
-      <th>Valor</th>
-      <th>Status</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody id="tabelaServicos"></tbody>
-</table>
-
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Cliente</th>
-            <th>Telefone</th>
-            <th>Serviço</th>
-            <th>Data</th>
-            <th>Horário</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="agendamentosTable"></tbody>
-      </table>
-
-      <button id="logoutBtn" class="btn btn-danger">Sair</button>
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <input type="date" id="dataAgenda" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <input type="text" id="horariosAgenda" class="form-control" placeholder="09:00,10:00,14:00">
+      </div>
+      <div class="col-md-3">
+        <button id="salvarAgenda" class="btn btn-custom w-100">Salvar</button>
+      </div>
     </div>
 
+    <!-- SERVIÇOS -->
+    <h3>Serviços</h3>
+
+    <div class="row mb-3">
+      <div class="col-md-5">
+        <input id="nomeServico" class="form-control" placeholder="Nome">
+      </div>
+      <div class="col-md-3">
+        <input id="valorServico" class="form-control" placeholder="Valor">
+      </div>
+      <div class="col-md-2">
+        <button id="salvarServico" class="btn btn-custom w-100">Salvar</button>
+      </div>
+    </div>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Serviço</th>
+          <th>Valor</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaServicos"></tbody>
+    </table>
+
+    <!-- AGENDAMENTOS -->
+    <h3>Agendamentos</h3>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Data</th>
+          <th>Horário</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="agendamentosTable"></tbody>
+    </table>
+
+    <button id="logoutBtn" class="btn btn-danger">Sair</button>
+
   </div>
 
-  <footer>
-    <p>Atendimento Terça a Sábado</p>
-  </footer>
+</div>
 
-  <script>
-$('#salvarAgenda').click(async () => {
-  const data = $('#dataAgenda').val();
-  const horarios = $('#horariosAgenda').val().split(',');
+<script>
+$(document).ready(function() {
 
-  if (!data || horarios.length === 0) {
-    alert('Preencha data e horários');
-    return;
+  function entrarAdmin(){
+    $('#loginContainer').hide();
+    $('#adminContent').show();
+    listarAgendamentos();
+    listarServicos();
   }
 
-  await db.collection('agenda').doc(data).set({
-    data: data,
-    horarios: horarios,
-    bloqueados: [],
-    ativo: true
+  // LOGIN
+  $('#loginForm').submit(function(e){
+    e.preventDefault();
+
+    auth.signInWithEmailAndPassword(
+      $('#email').val(),
+      $('#senha').val()
+    ).then(entrarAdmin)
+     .catch(e => alert(e.message));
   });
 
-  alert('Agenda salva!');
-});
+  $('#loginGoogle').click(async ()=>{
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await auth.signInWithPopup(provider);
+    entrarAdmin();
+  });
 
-window.bloquearHorario = async function(data, horario) {
-  const ref = db.collection('agenda').doc(data);
+  $('#logoutBtn').click(()=>{
+    auth.signOut();
+    location.reload();
+  });
 
-  const doc = await ref.get();
+  // AGENDA
+  $('#salvarAgenda').click(async ()=>{
+    const data = $('#dataAgenda').val();
+    const horarios = $('#horariosAgenda').val().split(',');
 
-  if (!doc.exists) return alert('Agenda não encontrada');
+    await db.collection('agenda').doc(data).set({
+      data,
+      horarios,
+      bloqueados:[]
+    });
 
-  const dados = doc.data();
+    alert('Agenda salva');
+  });
 
-  let bloqueados = dados.bloqueados || [];
+  // SERVIÇOS
+  async function listarServicos(){
+    const tabela = $('#tabelaServicos');
+    tabela.empty();
 
-  if (!bloqueados.includes(horario)) {
-    bloqueados.push(horario);
+    const snap = await db.collection('servicos').get();
+
+    snap.forEach(doc=>{
+      const s = doc.data();
+
+      tabela.append(`
+        <tr>
+          <td>${s.nome}</td>
+          <td>${s.valor}</td>
+          <td>${s.ativo ? 'Ativo' : 'Inativo'}</td>
+          <td>
+            <button onclick="toggleServico('${doc.id}', ${s.ativo})">🔄</button>
+            <button onclick="excluirServico('${doc.id}')">🗑</button>
+          </td>
+        </tr>
+      `);
+    });
   }
 
-  await ref.update({ bloqueados });
-
-  alert('Horário bloqueado');
-  listarAgendamentos();
-}
-
-    $(document).ready(function() {
-    
-      const loginForm = $('#loginForm');
-      const loginContainer = $('#loginContainer');
-      const adminContent = $('#adminContent');
-      const agendamentosTable = $('#agendamentosTable');
-    
-      // 🔓 Liberado sem claim (teste)
-      async function acessarAdmin() {
-        loginContainer.hide();
-        adminContent.show();
-        await listarAgendamentos();
-        await listarServicos();
-      }
-    
-      // Login email
-      loginForm.on('submit', function(e) {
-        e.preventDefault();
-    
-        auth.signInWithEmailAndPassword(
-          $('#email').val(),
-          $('#senha').val()
-        )
-        .then(() => acessarAdmin())
-        .catch(err => alert(err.message));
-      });
-    
-      // Login Google
-      $('#loginGoogle').click(async () => {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        try {
-          await auth.signInWithPopup(provider);
-          acessarAdmin();
-        } catch(e) {
-          alert(e.message);
-        }
-      });
-    
-      // Logout
-      $('#logoutBtn').click(() => {
-        auth.signOut();
-        location.reload();
-      });
-    
-      // ===============================
-      // 📋 AGENDAMENTOS
-      // ===============================
-    
-      async function listarAgendamentos() {
-        agendamentosTable.empty();
-    
-        const snapshot = await db.collection('agendamentos')
-          .orderBy('data')
-          .orderBy('horario')
-          .get();
-    
-        snapshot.forEach(doc => {
-          const a = doc.data();
-    
-          agendamentosTable.append(`
-            <tr>
-              <td>${a.nome}</td>
-              <td>${a.telefone}</td>
-              <td>${a.servico}</td>
-              <td>${a.data}</td>
-              <td>${a.horario}</td>
-              <td>${a.status || ''}</td>
-              <td>
-                <button class="btn btn-success btn-sm" onclick="atualizarStatus('${doc.id}', 'confirmado')">✔</button>
-                <button class="btn btn-danger btn-sm" onclick="atualizarStatus('${doc.id}', 'cancelado')">✖</button>
-              </td>
-            </tr>
-          `);
-        });
-      }
-    
-      window.atualizarStatus = async function(id, status) {
-        await db.collection('agendamentos').doc(id).update({ status });
-        listarAgendamentos();
-      }
-    
-      // ===============================
-      // 🧾 SERVIÇOS (CRUD COMPLETO)
-      // ===============================
-    
-      async function listarServicos() {
-        const tabela = $('#tabelaServicos');
-        tabela.empty();
-    
-        const snapshot = await db.collection('servicos').get();
-    
-        snapshot.forEach(doc => {
-          const s = doc.data();
-    
-          tabela.append(`
-            <tr>
-              <td>${s.nome}</td>
-              <td>R$ ${s.valor}</td>
-              <td>${s.ativo ? 'Ativo' : 'Inativo'}</td>
-              <td>
-                <button class="btn btn-warning btn-sm" onclick="editarServico('${doc.id}', '${s.nome}', '${s.valor}')">✏️</button>
-                <button class="btn btn-secondary btn-sm" onclick="toggleServico('${doc.id}', ${s.ativo})">🔄</button>
-                <button class="btn btn-danger btn-sm" onclick="excluirServico('${doc.id}')">🗑</button>
-              </td>
-            </tr>
-          `);
-        });
-      }
-    
-      // ➕ Criar serviço
-      $('#salvarServico').click(async function() {
-        const nome = $('#nomeServico').val();
-        const valor = $('#valorServico').val();
-    
-        if (!nome || !valor) {
-          alert('Preencha todos os campos');
-          return;
-        }
-    
-        await db.collection('servicos').add({
-          nome,
-          valor,
-          ativo: true
-        });
-    
-        $('#nomeServico').val('');
-        $('#valorServico').val('');
-    
-        listarServicos();
-      });
-    
-      // ✏️ Editar
-      window.editarServico = function(id, nome, valor) {
-        $('#nomeServico').val(nome);
-        $('#valorServico').val(valor);
-    
-        $('#salvarServico').off('click').click(async function() {
-          await db.collection('servicos').doc(id).update({
-            nome: $('#nomeServico').val(),
-            valor: $('#valorServico').val()
-          });
-    
-          $('#nomeServico').val('');
-          $('#valorServico').val('');
-    
-          // volta comportamento normal
-          $('#salvarServico').off('click');
-    
-          listarServicos();
-        });
-      }
-    
-      // 🔄 Ativar/Inativar
-      window.toggleServico = async function(id, ativo) {
-        await db.collection('servicos').doc(id).update({
-          ativo: !ativo
-        });
-    
-        listarServicos();
-      }
-    
-      // 🗑 Excluir
-      window.excluirServico = async function(id) {
-        if (confirm('Deseja excluir este serviço?')) {
-          await db.collection('servicos').doc(id).delete();
-          listarServicos();
-        }
-      }
-    
+  $('#salvarServico').click(async ()=>{
+    await db.collection('servicos').add({
+      nome: $('#nomeServico').val(),
+      valor: $('#valorServico').val(),
+      ativo: true
     });
-    </script>
+
+    listarServicos();
+  });
+
+  window.toggleServico = async (id, ativo)=>{
+    await db.collection('servicos').doc(id).update({ativo: !ativo});
+    listarServicos();
+  }
+
+  window.excluirServico = async (id)=>{
+    await db.collection('servicos').doc(id).delete();
+    listarServicos();
+  }
+
+  // AGENDAMENTOS
+  async function listarAgendamentos(){
+    const tabela = $('#agendamentosTable');
+    tabela.empty();
+
+    const snap = await db.collection('agendamentos').get();
+
+    snap.forEach(doc=>{
+      const a = doc.data();
+
+      tabela.append(`
+        <tr>
+          <td>${a.nome}</td>
+          <td>${a.data}</td>
+          <td>${a.horario}</td>
+          <td>${a.status}</td>
+          <td>
+            <button onclick="status('${doc.id}','confirmado')">✔</button>
+            <button onclick="status('${doc.id}','cancelado')">✖</button>
+          </td>
+        </tr>
+      `);
+    });
+  }
+
+  window.status = async (id, status)=>{
+    await db.collection('agendamentos').doc(id).update({status});
+    listarAgendamentos();
+  }
+
+});
+</script>
 
 </body>
 </html>
