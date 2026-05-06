@@ -20,10 +20,14 @@
   </style>
 
   <script>
+    // 🔥 CONFIG COMPLETO (OBRIGATÓRIO)
     const firebaseConfig = {
-      apiKey: "SUA_KEY",
+      apiKey: "AIzaSyDb-xyAcfPGLlH0UfOYOFBCD8E__CaB8tk",
       authDomain: "andrenailsdesign.firebaseapp.com",
-      projectId: "andrenailsdesign"
+      projectId: "andrenailsdesign",
+      storageBucket: "andrenailsdesign.firebasestorage.app",
+      messagingSenderId: "527220434204",
+      appId: "1:527220434204:web:cf5f71320a4d98de6646d9"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -56,7 +60,6 @@
   <!-- ADMIN -->
   <div id="adminContent" style="display:none;">
 
-    <!-- AGENDA -->
     <h3>Controle de Agenda</h3>
 
     <div class="row mb-3">
@@ -71,7 +74,6 @@
       </div>
     </div>
 
-    <!-- SERVIÇOS -->
     <h3>Serviços</h3>
 
     <div class="row mb-3">
@@ -98,7 +100,6 @@
       <tbody id="tabelaServicos"></tbody>
     </table>
 
-    <!-- AGENDAMENTOS -->
     <h3>Agendamentos</h3>
 
     <table class="table table-bordered">
@@ -130,26 +131,40 @@ $(document).ready(function() {
     listarServicos();
   }
 
-  // LOGIN
+  // 🔥 CONTROLE DE SESSÃO (ESSENCIAL)
+  auth.onAuthStateChanged(function(user) {
+    if (user) {
+      entrarAdmin();
+    } else {
+      $('#loginContainer').show();
+      $('#adminContent').hide();
+    }
+  });
+
+  // LOGIN EMAIL
   $('#loginForm').submit(function(e){
     e.preventDefault();
 
     auth.signInWithEmailAndPassword(
       $('#email').val(),
       $('#senha').val()
-    ).then(entrarAdmin)
-     .catch(e => alert(e.message));
+    ).catch(e => alert(e.message));
   });
 
+  // LOGIN GOOGLE (COM FALLBACK)
   $('#loginGoogle').click(async ()=>{
     const provider = new firebase.auth.GoogleAuthProvider();
-    await auth.signInWithPopup(provider);
-// NÃO chama entrarAdmin aqui
+
+    try {
+      await auth.signInWithPopup(provider);
+    } catch (e) {
+      console.error(e);
+      await auth.signInWithRedirect(provider);
+    }
   });
 
   $('#logoutBtn').click(()=>{
     auth.signOut();
-    location.reload();
   });
 
   // AGENDA
