@@ -223,30 +223,39 @@ $(document).ready(function() {
   }
 
   $('#salvarServico').click(async ()=>{
-    const nome = $('#nomeServico').val();
-    const valor = $('#valorServico').val();
+  const nome = $('#nomeServico').val();
+  const valor = $('#valorServico').val();
 
-    if (!nome || !valor) {
-      alert('Preencha nome e valor');
-      return;
-    }
+  if (!nome || !valor) {
+    alert('Preencha nome e valor');
+    return;
+  }
 
+  if (window.editandoId) {
+    // 🔥 EDITAR
+    await db.collection('servicos').doc(window.editandoId).update({
+      nome,
+      valor
+    });
+
+    window.editandoId = null;
+    alert('Serviço atualizado!');
+  } else {
+    // 🔥 CRIAR
     await db.collection('servicos').add({
       nome,
       valor,
       ativo: true
     });
 
-    $('#nomeServico').val('');
-    $('#valorServico').val('');
-
-    listarServicos();
-  });
-
-  window.toggleServico = async (id, ativo)=>{
-    await db.collection('servicos').doc(id).update({ativo: !ativo});
-    listarServicos();
+    alert('Serviço criado!');
   }
+
+  $('#nomeServico').val('');
+  $('#valorServico').val('');
+
+  listarServicos();
+});
 
   window.editandoId = null;
 
