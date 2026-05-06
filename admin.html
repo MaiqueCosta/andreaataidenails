@@ -65,6 +65,22 @@
       <button id="loginGoogle" class="btn btn-custom">Entrar com Google</button>
     </div>
 
+    <h3>Controle de Agenda</h3>
+
+<div class="row mb-3">
+  <div class="col-md-3">
+    <input type="date" id="dataAgenda" class="form-control">
+  </div>
+
+  <div class="col-md-6">
+    <input type="text" id="horariosAgenda" class="form-control" placeholder="Ex: 09:00,10:00,14:00">
+  </div>
+
+  <div class="col-md-3">
+    <button id="salvarAgenda" class="btn btn-custom w-100">Salvar Agenda</button>
+  </div>
+</div>
+
     <div id="adminContent" style="display:none;">
       <h3>Agendamentos</h3>
 
@@ -119,6 +135,46 @@
   </footer>
 
   <script>
+$('#salvarAgenda').click(async () => {
+  const data = $('#dataAgenda').val();
+  const horarios = $('#horariosAgenda').val().split(',');
+
+  if (!data || horarios.length === 0) {
+    alert('Preencha data e horários');
+    return;
+  }
+
+  await db.collection('agenda').doc(data).set({
+    data: data,
+    horarios: horarios,
+    bloqueados: [],
+    ativo: true
+  });
+
+  alert('Agenda salva!');
+});
+
+window.bloquearHorario = async function(data, horario) {
+  const ref = db.collection('agenda').doc(data);
+
+  const doc = await ref.get();
+
+  if (!doc.exists) return alert('Agenda não encontrada');
+
+  const dados = doc.data();
+
+  let bloqueados = dados.bloqueados || [];
+
+  if (!bloqueados.includes(horario)) {
+    bloqueados.push(horario);
+  }
+
+  await ref.update({ bloqueados });
+
+  alert('Horário bloqueado');
+  listarAgendamentos();
+}
+
     $(document).ready(function() {
     
       const loginForm = $('#loginForm');
