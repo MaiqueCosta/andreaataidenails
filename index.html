@@ -77,13 +77,7 @@ const firebaseConfig = {
 $(document).ready(function () {
 
   // 📞 Telefone
-  <input 
-  class="form-control mb-2" 
-  id="telefone" 
-  placeholder="(99) 99999-9999" 
-  pattern="\(\d{2}\) \d{5}-\d{4}" 
-  required
->
+  Inputmask("(99) 99999-9999").mask("#telefone");
 
   // =========================
   // 🔥 CARREGAR SERVIÇOS
