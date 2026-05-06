@@ -20,9 +20,10 @@
     .btn-admin { position: absolute; top: 10px; right: 10px; }
   </style>
 
-  <!-- Firebase SDK v9 -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <!-- 🔥 Firebase V8 (CORRETO) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDb-xyAcfPGLlH0UfOYOFBCD8E__CaB8tk",
@@ -30,79 +31,58 @@
       projectId: "andrenailsdesign",
       storageBucket: "andrenailsdesign.firebasestorage.app",
       messagingSenderId: "527220434204",
-      appId: "1:527220434204:web:cf5f71320a4d98de6646d9",
-      measurementId: "G-ZJ7P4RJNHZ"
+      appId: "1:527220434204:web:cf5f71320a4d98de6646d9"
     };
 
-    const app = firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
   </script>
 </head>
+
 <body>
   <header>
     <h1>Andréa Nails</h1>
     <p>Manicure profissional com agendamento online</p>
 
-    <!-- Botão de acesso ao painel admin -->
     <a href="admin.html" class="btn btn-dark btn-sm btn-admin">Painel Admin</a>
   </header>
 
   <div class="container">
     <h2>Agende seu horário</h2>
+
     <form id="formAgendamento" action="https://formsubmit.co/andreataidenails@gmail.com" method="POST">
+
       <div class="mb-3">
-        <label for="nome" class="form-label">Nome</label>
-        <input type="text" class="form-control" id="nome" name="nome" required />
+        <label class="form-label">Nome</label>
+        <input type="text" class="form-control" id="nome" required />
       </div>
 
       <div class="mb-3">
-        <label for="telefone" class="form-label">Telefone / WhatsApp</label>
-        <input type="tel" class="form-control" id="telefone" name="telefone" required />
+        <label class="form-label">Telefone</label>
+        <input type="tel" class="form-control" id="telefone" required />
       </div>
 
       <div class="mb-3">
-        <label for="servico" class="form-label">Serviço</label>
-        <select class="form-select" id="servico" name="servico" required>
-          <option value="">Selecione</option>
-          <optgroup label="BÁSICO">
-            <option>Manicure/Pedicure: R$ 40,00</option>
-            <option>Manicure: R$ 25,00</option>
-            <option>Pedicure: R$ 25,00</option>
-            <option>Esmaltação tradicional: R$ 15,00</option>
-            <option>Esmaltação em gel: R$ 40,00</option>
-            <option>Plástica dos pés: R$ 60,00</option>
-          </optgroup>
-          <optgroup label="ALONGAMENTOS">
-            <option>Fibra de vidro: R$ 180,00</option>
-            <option>Gel na tip: R$ 130,00</option>
-            <option>Gel no molde F1: R$ 120,00</option>
-            <option>Postiça realista: R$ 50,00</option>
-          </optgroup>
-          <optgroup label="OUTROS">
-            <option>Manutenção de fibra: R$ 100,00</option>
-            <option>Manutenção de gel: R$ 85,00</option>
-            <option>Banho de gel: R$ 65,00</option>
-            <option>Reposição de unha (un): R$ 10,00</option>
-            <option>Remoção de alongamento: R$ 20,00</option>
-          </optgroup>
+        <label class="form-label">Serviço</label>
+        <select class="form-select" id="servico" required>
+          <option>Carregando serviços...</option>
         </select>
       </div>
 
       <div class="mb-3">
-        <label for="data" class="form-label">Data</label>
-        <input type="date" class="form-control" id="data" name="data" min="2025-04-15" required />
+        <label class="form-label">Data</label>
+        <input type="date" class="form-control" id="data" required />
       </div>
 
       <div class="mb-3">
-        <label for="horario" class="form-label">Horário</label>
-        <select class="form-select" id="horario" name="horario" required>
+        <label class="form-label">Horário</label>
+        <select class="form-select" id="horario" required>
           <option value="">Selecione</option>
         </select>
       </div>
 
       <button type="submit" class="btn btn-custom">Enviar Agendamento</button>
 
-      <!-- Formsubmit config -->
       <input type="hidden" name="_captcha" value="false" />
       <input type="hidden" name="_next" value="https://andreaataidenails.com.br/obrigado.html" />
     </form>
@@ -110,84 +90,106 @@
 
   <footer>
     <p>
-      📍 Atendimentos de Terça a Sábado, das 08h às 17h<br />
-      📞 <a href="https://wa.me/5571993467611" target="_blank">Fale conosco no WhatsApp</a>
+      📍 Terça a Sábado, 08h às 17h<br>
+      📞 <a href="https://wa.me/5571993467611" target="_blank">WhatsApp</a>
     </p>
   </footer>
 
-  <script>
-    $(document).ready(function () {
-      const horariosPossiveis = ["09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00"];
+<script>
+$(document).ready(function () {
 
-      $('#telefone').inputmask({
-        mask: '(99) 99999-9999',
-        placeholder: '_',
-        showMaskOnHover: false,
-        showMaskOnFocus: true,
-        greedy: false,
+  const horariosPossiveis = ["09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00"];
+
+  // 🔥 CARREGAR SERVIÇOS DINÂMICOS
+  async function carregarServicos() {
+    const select = $('#servico');
+    select.empty().append('<option>Carregando...</option>');
+
+    try {
+      const snapshot = await db.collection('servicos')
+        .where('ativo', '==', true)
+        .get();
+
+      select.empty().append('<option value="">Selecione</option>');
+
+      snapshot.forEach(doc => {
+        const s = doc.data();
+        select.append(`<option value="${s.nome} - R$ ${s.valor}">
+          ${s.nome} - R$ ${s.valor}
+        </option>`);
       });
 
-      // Atualiza horários disponíveis quando a data muda
-      $('#data').on('change', async function () {
-        const dataSelecionada = $(this).val();
-        $('#horario').empty().append('<option value="">Selecione</option>');
+    } catch (e) {
+      console.error(e);
+      select.html('<option>Erro ao carregar</option>');
+    }
+  }
 
-        if (!dataSelecionada) return;
+  carregarServicos();
 
-        const snapshot = await db.collection('agendamentos')
-                                 .where('data', '==', dataSelecionada)
-                                 .get();
+  // Máscara telefone
+  $('#telefone').inputmask({
+    mask: '(99) 99999-9999'
+  });
 
-        const horariosOcupados = snapshot.docs.map(doc => doc.data().horario);
-        const horariosLivres = horariosPossiveis.filter(h => !horariosOcupados.includes(h));
+  // Horários
+  $('#data').on('change', async function () {
+    const dataSelecionada = $(this).val();
+    $('#horario').empty().append('<option>Carregando...</option>');
 
-        horariosLivres.forEach(h => {
-          $('#horario').append(`<option value="${h}">${h}</option>`);
-        });
-      });
+    const snapshot = await db.collection('agendamentos')
+      .where('data', '==', dataSelecionada)
+      .get();
 
-      $('#formAgendamento').on('submit', async function (e) {
-        e.preventDefault();
+    const ocupados = snapshot.docs.map(doc => doc.data().horario);
+    const livres = horariosPossiveis.filter(h => !ocupados.includes(h));
 
-        if (!$('#telefone').inputmask("isComplete")) {
-          alert('Por favor, digite o telefone completo no formato (99) 99999-9999.');
-          $('#telefone').focus();
-          return false;
-        }
+    $('#horario').empty();
 
-        const nome = $('#nome').val();
-        const telefone = $('#telefone').val();
-        const servico = $('#servico').val();
-        const data = $('#data').val();
-        const horario = $('#horario').val();
+    if (livres.length === 0) {
+      $('#horario').append('<option>Sem horários</option>');
+      return;
+    }
 
-        const snapshot = await db.collection('agendamentos')
-                                 .where('data', '==', data)
-                                 .where('horario', '==', horario)
-                                 .get();
+    $('#horario').append('<option value="">Selecione</option>');
 
-        if (!snapshot.empty) {
-          alert('Desculpe, este horário já foi reservado. Escolha outro.');
-          return;
-        }
-
-        await db.collection('agendamentos').add({
-          nome: nome,
-          telefone: telefone,
-          servico: servico,
-          data: data,
-          horario: horario,
-          status: "agendado",
-          criadoEm: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        alert('Obrigado! Seu agendamento foi enviado com sucesso!');
-        $('#formAgendamento')[0].reset();
-        $('#horario').empty().append('<option value="">Selecione</option>');
-
-        this.submit();
-      });
+    livres.forEach(h => {
+      $('#horario').append(`<option value="${h}">${h}</option>`);
     });
-  </script>
+  });
+
+  // Envio
+  $('#formAgendamento').on('submit', async function (e) {
+    e.preventDefault();
+
+    const nome = $('#nome').val();
+    const telefone = $('#telefone').val();
+    const servico = $('#servico').val();
+    const data = $('#data').val();
+    const horario = $('#horario').val();
+
+    const check = await db.collection('agendamentos')
+      .where('data', '==', data)
+      .where('horario', '==', horario)
+      .get();
+
+    if (!check.empty) {
+      alert('Horário já ocupado');
+      return;
+    }
+
+    await db.collection('agendamentos').add({
+      nome, telefone, servico, data, horario,
+      status: "agendado",
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert('Agendado com sucesso!');
+    this.reset();
+  });
+
+});
+</script>
+
 </body>
 </html>
