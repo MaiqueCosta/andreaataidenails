@@ -68,6 +68,32 @@
     <div id="adminContent" style="display:none;">
       <h3>Agendamentos</h3>
 
+      <h3>Gerenciar Serviços</h3>
+
+<div class="row mb-3">
+  <div class="col-md-5">
+    <input id="nomeServico" class="form-control" placeholder="Nome do serviço">
+  </div>
+  <div class="col-md-3">
+    <input id="valorServico" class="form-control" placeholder="Valor (ex: 50)">
+  </div>
+  <div class="col-md-2">
+    <button id="salvarServico" class="btn btn-custom w-100">Salvar</button>
+  </div>
+</div>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Serviço</th>
+      <th>Valor</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody id="tabelaServicos"></tbody>
+</table>
+
       <table class="table table-bordered">
         <thead>
           <tr>
@@ -92,93 +118,178 @@
     <p>Atendimento Terça a Sábado</p>
   </footer>
 
-<script>
-$(document).ready(function() {
-
-  const loginForm = $('#loginForm');
-  const loginContainer = $('#loginContainer');
-  const adminContent = $('#adminContent');
-  const agendamentosTable = $('#agendamentosTable');
-
-  // 🔓 Liberado sem claim (teste)
-  async function acessarAdmin() {
-    loginContainer.hide();
-    adminContent.show();
-    await listarAgendamentos();
-  }
-
-  // Login email
-  loginForm.on('submit', function(e) {
-    e.preventDefault();
-
-    auth.signInWithEmailAndPassword(
-      $('#email').val(),
-      $('#senha').val()
-    )
-    .then(() => acessarAdmin())
-    .catch(err => alert(err.message));
-  });
-
-  // Login Google
-  $('#loginGoogle').click(async () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    try {
-      await auth.signInWithPopup(provider);
-      acessarAdmin();
-    } catch(e) {
-      alert(e.message);
-    }
-  });
-
-  // Logout
-  $('#logoutBtn').click(() => {
-    auth.signOut();
-    location.reload();
-  });
-
-  // 📋 Listar agendamentos
-  async function listarAgendamentos() {
-    agendamentosTable.empty();
-
-    const snapshot = await db.collection('agendamentos')
-      .orderBy('data')
-      .orderBy('horario')
-      .get();
-
-    snapshot.forEach(doc => {
-      const a = doc.data();
-
-      agendamentosTable.append(`
-        <tr>
-          <td>${a.nome}</td>
-          <td>${a.telefone}</td>
-          <td>${a.servico}</td>
-          <td>${a.data}</td>
-          <td>${a.horario}</td>
-          <td>${a.status || ''}</td>
-          <td>
-            <button class="btn btn-success btn-sm" onclick="atualizarStatus('${doc.id}', 'confirmado')">✔</button>
-            <button class="btn btn-danger btn-sm" onclick="atualizarStatus('${doc.id}', 'cancelado')">✖</button>
-          </td>
-        </tr>
-      `);
+  <script>
+    $(document).ready(function() {
+    
+      const loginForm = $('#loginForm');
+      const loginContainer = $('#loginContainer');
+      const adminContent = $('#adminContent');
+      const agendamentosTable = $('#agendamentosTable');
+    
+      // 🔓 Liberado sem claim (teste)
+      async function acessarAdmin() {
+        loginContainer.hide();
+        adminContent.show();
+        await listarAgendamentos();
+        await listarServicos();
+      }
+    
+      // Login email
+      loginForm.on('submit', function(e) {
+        e.preventDefault();
+    
+        auth.signInWithEmailAndPassword(
+          $('#email').val(),
+          $('#senha').val()
+        )
+        .then(() => acessarAdmin())
+        .catch(err => alert(err.message));
+      });
+    
+      // Login Google
+      $('#loginGoogle').click(async () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+          await auth.signInWithPopup(provider);
+          acessarAdmin();
+        } catch(e) {
+          alert(e.message);
+        }
+      });
+    
+      // Logout
+      $('#logoutBtn').click(() => {
+        auth.signOut();
+        location.reload();
+      });
+    
+      // ===============================
+      // 📋 AGENDAMENTOS
+      // ===============================
+    
+      async function listarAgendamentos() {
+        agendamentosTable.empty();
+    
+        const snapshot = await db.collection('agendamentos')
+          .orderBy('data')
+          .orderBy('horario')
+          .get();
+    
+        snapshot.forEach(doc => {
+          const a = doc.data();
+    
+          agendamentosTable.append(`
+            <tr>
+              <td>${a.nome}</td>
+              <td>${a.telefone}</td>
+              <td>${a.servico}</td>
+              <td>${a.data}</td>
+              <td>${a.horario}</td>
+              <td>${a.status || ''}</td>
+              <td>
+                <button class="btn btn-success btn-sm" onclick="atualizarStatus('${doc.id}', 'confirmado')">✔</button>
+                <button class="btn btn-danger btn-sm" onclick="atualizarStatus('${doc.id}', 'cancelado')">✖</button>
+              </td>
+            </tr>
+          `);
+        });
+      }
+    
+      window.atualizarStatus = async function(id, status) {
+        await db.collection('agendamentos').doc(id).update({ status });
+        listarAgendamentos();
+      }
+    
+      // ===============================
+      // 🧾 SERVIÇOS (CRUD COMPLETO)
+      // ===============================
+    
+      async function listarServicos() {
+        const tabela = $('#tabelaServicos');
+        tabela.empty();
+    
+        const snapshot = await db.collection('servicos').get();
+    
+        snapshot.forEach(doc => {
+          const s = doc.data();
+    
+          tabela.append(`
+            <tr>
+              <td>${s.nome}</td>
+              <td>R$ ${s.valor}</td>
+              <td>${s.ativo ? 'Ativo' : 'Inativo'}</td>
+              <td>
+                <button class="btn btn-warning btn-sm" onclick="editarServico('${doc.id}', '${s.nome}', '${s.valor}')">✏️</button>
+                <button class="btn btn-secondary btn-sm" onclick="toggleServico('${doc.id}', ${s.ativo})">🔄</button>
+                <button class="btn btn-danger btn-sm" onclick="excluirServico('${doc.id}')">🗑</button>
+              </td>
+            </tr>
+          `);
+        });
+      }
+    
+      // ➕ Criar serviço
+      $('#salvarServico').click(async function() {
+        const nome = $('#nomeServico').val();
+        const valor = $('#valorServico').val();
+    
+        if (!nome || !valor) {
+          alert('Preencha todos os campos');
+          return;
+        }
+    
+        await db.collection('servicos').add({
+          nome,
+          valor,
+          ativo: true
+        });
+    
+        $('#nomeServico').val('');
+        $('#valorServico').val('');
+    
+        listarServicos();
+      });
+    
+      // ✏️ Editar
+      window.editarServico = function(id, nome, valor) {
+        $('#nomeServico').val(nome);
+        $('#valorServico').val(valor);
+    
+        $('#salvarServico').off('click').click(async function() {
+          await db.collection('servicos').doc(id).update({
+            nome: $('#nomeServico').val(),
+            valor: $('#valorServico').val()
+          });
+    
+          $('#nomeServico').val('');
+          $('#valorServico').val('');
+    
+          // volta comportamento normal
+          $('#salvarServico').off('click');
+    
+          listarServicos();
+        });
+      }
+    
+      // 🔄 Ativar/Inativar
+      window.toggleServico = async function(id, ativo) {
+        await db.collection('servicos').doc(id).update({
+          ativo: !ativo
+        });
+    
+        listarServicos();
+      }
+    
+      // 🗑 Excluir
+      window.excluirServico = async function(id) {
+        if (confirm('Deseja excluir este serviço?')) {
+          await db.collection('servicos').doc(id).delete();
+          listarServicos();
+        }
+      }
+    
     });
-  }
-
-  // 🔥 Atualizar status
-  window.atualizarStatus = async function(id, status) {
-    await db.collection('agendamentos').doc(id).update({ status });
-    listarAgendamentos();
-  }
-
-});
-</script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js');
-}
-</script>
+    </script>
 
 </body>
 </html>
