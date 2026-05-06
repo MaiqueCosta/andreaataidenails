@@ -51,7 +51,7 @@
     <input class="form-control mb-2" id="telefone" placeholder="Telefone" required>
 
     <select class="form-control mb-2" id="servico" required>
-      <option>Carregando serviços...</option>
+      <option value="">Carregando serviços...</option>
     </select>
 
     <input type="date" class="form-control mb-2" id="data" required>
@@ -75,7 +75,9 @@ $(document).ready(function () {
   // 📞 Telefone
   $('#telefone').inputmask({ mask: '(99) 99999-9999' });
 
-  // 🔥 SERVIÇOS
+  // =========================
+  // 🔥 CARREGAR SERVIÇOS
+  // =========================
   async function carregarServicos() {
     const select = $('#servico');
 
@@ -86,19 +88,30 @@ $(document).ready(function () {
 
       select.empty().append('<option value="">Selecione</option>');
 
+      if (snapshot.empty) {
+        select.append('<option value="">Nenhum serviço disponível</option>');
+        return;
+      }
+
       snapshot.forEach(doc => {
         const s = doc.data();
-        select.append(`<option>${s.nome} - R$ ${s.valor}</option>`);
+
+        select.append(`
+          <option value="${s.nome} - R$ ${s.valor}">
+            ${s.nome} - R$ ${s.valor}
+          </option>
+        `);
       });
 
-    } catch {
+    } catch (e) {
+      console.error("Erro ao carregar serviços:", e);
       select.html('<option>Erro ao carregar</option>');
     }
   }
 
-  carregarServicos();
-
-  // 🔥 HORÁRIOS (AGENDA REAL)
+  // =========================
+  // 🔥 CARREGAR HORÁRIOS
+  // =========================
   $('#data').on('change', async function () {
     const data = $(this).val();
     const select = $('#horario');
@@ -142,12 +155,14 @@ $(document).ready(function () {
       });
 
     } catch (e) {
-      console.error(e);
+      console.error("Erro ao carregar horários:", e);
       select.html('<option>Erro ao carregar</option>');
     }
   });
 
+  // =========================
   // 🚀 AGENDAR
+  // =========================
   $('#formAgendamento').on('submit', async function (e) {
     e.preventDefault();
 
@@ -173,15 +188,22 @@ $(document).ready(function () {
     }
 
     await db.collection('agendamentos').add({
-      nome, telefone, servico, data, horario,
+      nome,
+      telefone,
+      servico,
+      data,
+      horario,
       status: "agendado",
       criadoEm: firebase.firestore.FieldValue.serverTimestamp()
     });
 
     alert('Agendamento realizado!');
     this.reset();
-    $('#horario').html('<option>Selecione</option>');
+    $('#horario').html('<option value="">Selecione</option>');
   });
+
+  // 🔥 INICIAR
+  carregarServicos();
 
 });
 </script>

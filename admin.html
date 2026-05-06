@@ -197,8 +197,8 @@ $(document).ready(function() {
           <td>${s.valor}</td>
           <td>${s.ativo ? 'Ativo' : 'Inativo'}</td>
           <td>
-            <button onclick="toggleServico('${doc.id}', ${s.ativo})">🔄</button>
-            <button onclick="excluirServico('${doc.id}')">🗑</button>
+            <button class="btn btn-warning btn-sm" onclick="toggleServico('${doc.id}', ${s.ativo})">🔄</button>
+            <button class="btn btn-danger btn-sm" onclick="excluirServico('${doc.id}')">🗑</button>
           </td>
         </tr>
       `);
