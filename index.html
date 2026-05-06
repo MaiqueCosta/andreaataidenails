@@ -10,9 +10,6 @@
   <!-- jQuery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-  <!-- ✅ INPUTMASK (VERSÃO CERTA MODERNA) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
-
   <style>
     body { font-family: Arial; background-color: #fff0f6; }
     header { background-color: #ff69b4; color: white; padding: 20px; text-align: center; position: relative; }
@@ -60,6 +57,7 @@
       class="form-control mb-2" 
       id="telefone" 
       placeholder="(99) 99999-9999"
+      maxlength="15"
       required
     >
 
@@ -85,8 +83,28 @@
 <script>
 $(document).ready(function () {
 
-  // ✅ INPUTMASK CORRETO (VERSÃO MODERNA)
-  Inputmask({"mask": "(99) 99999-9999"}).mask(document.getElementById("telefone"));
+  // =========================
+  // 📞 MÁSCARA DE TELEFONE (SEM PLUGIN)
+  // =========================
+  function formatarTelefone(v) {
+    v = v.replace(/\D/g, ""); // só números
+
+    if (v.length > 11) v = v.substring(0, 11);
+
+    if (v.length <= 10) {
+      v = v.replace(/(\d{2})(\d)/, "($1) $2");
+      v = v.replace(/(\d{4})(\d)/, "$1-$2");
+    } else {
+      v = v.replace(/(\d{2})(\d)/, "($1) $2");
+      v = v.replace(/(\d{5})(\d)/, "$1-$2");
+    }
+
+    return v;
+  }
+
+  $('#telefone').on('input', function () {
+    this.value = formatarTelefone(this.value);
+  });
 
   // =========================
   // 🔥 CARREGAR SERVIÇOS
