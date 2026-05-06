@@ -248,6 +248,15 @@ $(document).ready(function() {
     listarServicos();
   }
 
+  window.editandoId = null;
+
+window.editarServico = function(id, nome, valor) {
+  $('#nomeServico').val(nome);
+  $('#valorServico').val(valor);
+
+  window.editandoId = id;
+}
+
   window.excluirServico = async (id)=>{
     if (confirm('Excluir serviço?')) {
       await db.collection('servicos').doc(id).delete();
