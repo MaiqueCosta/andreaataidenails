@@ -1,242 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Andréa Nails - Agendamento</title>
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-
-  <!-- jQuery -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ff1493"><title>Andréa Nails | Agendamento online</title>
+  <link rel="manifest" href="manifest.json"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <style>
-    body { font-family: Arial; background-color: #fff0f6; }
-    header { background-color: #ff69b4; color: white; padding: 20px; text-align: center; position: relative; }
-    .container { margin-top: 30px; }
-    footer { text-align: center; padding: 20px; background-color: #ff69b4; color: white; margin-top: 40px; }
-    .btn-custom { background-color: #ff1493; color: white; }
-    .btn-admin { position: absolute; top: 10px; right: 10px; }
+    :root{--pink:#ff1493;--light:#fff0f6}body{font-family:Arial,sans-serif;background:var(--light);color:#34212b}header{background:#ff69b4;color:#fff;padding:24px 16px;text-align:center;position:relative}header h1{margin:0;font-weight:700}.container{max-width:760px;margin-top:28px}.card{border:0;border-radius:16px;box-shadow:0 5px 22px #8a36501a}.btn-custom{background:var(--pink);color:#fff;border:0}.btn-custom:hover{background:#d90d7a;color:#fff}.btn-admin{position:absolute;right:12px;top:12px}footer{background:#ff69b4;color:white;text-align:center;padding:22px;margin-top:40px}footer a{color:white}.help{font-size:.9rem;color:#6b5861}
   </style>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDb-xyAcfPGLlH0UfOYOFBCD8E__CaB8tk",
-      authDomain: "andrenailsdesign.firebaseapp.com",
-      projectId: "andrenailsdesign",
-      storageBucket: "andrenailsdesign.firebasestorage.app",
-      messagingSenderId: "527220434204",
-      appId: "1:527220434204:web:cf5f71320a4d98de6646d9"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const firebaseConfig={apiKey:"AIzaSyDb-xyAcfPGLlH0UfOYOFBCD8E__CaB8tk",authDomain:"andrenailsdesign.firebaseapp.com",projectId:"andrenailsdesign",storageBucket:"andrenailsdesign.firebasestorage.app",messagingSenderId:"527220434204",appId:"1:527220434204:web:cf5f71320a4d98de6646d9"};
+    firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
   </script>
 </head>
-
 <body>
-
-<header>
-  <h1>Andréa Nails</h1>
-  <p>Agendamento online</p>
-  <a href="admin.html" class="btn btn-dark btn-sm btn-admin">Admin</a>
-</header>
-
-<div class="container">
-  <h2>Agende seu horário</h2>
-
-  <form id="formAgendamento">
-
-    <input class="form-control mb-2" id="nome" placeholder="Nome" required>
-
-    <input 
-      class="form-control mb-2" 
-      id="telefone" 
-      placeholder="(99) 99999-9999"
-      maxlength="15"
-      required
-    >
-
-    <select class="form-control mb-2" id="servico" required>
-      <option value="">Carregando serviços...</option>
-    </select>
-
-    <input type="date" class="form-control mb-2" id="data" required>
-
-    <select class="form-control mb-2" id="horario" required>
-      <option value="">Selecione</option>
-    </select>
-
-    <button class="btn btn-custom w-100">Agendar</button>
-
-  </form>
-</div>
-
-<footer>
-  <p>Terça a Sábado - 08h às 17h</p>
-</footer>
-
+<header><h1>Andréa Nails</h1><p class="mb-0">Manicure profissional • Agendamento online</p><a href="admin.html" class="btn btn-dark btn-sm btn-admin">Área administrativa</a></header>
+<main class="container mb-4"><div class="card p-4 p-md-5"><h2 class="mb-2">Agende seu horário</h2><p class="help mb-4">Escolha o serviço, data e horário. Nesta etapa, o pagamento será combinado diretamente no atendimento.</p>
+<form id="formAgendamento">
+  <label for="nome" class="form-label">Nome completo</label><input class="form-control mb-3" id="nome" maxlength="100" autocomplete="name" required>
+  <label for="telefone" class="form-label">Telefone / WhatsApp</label><input type="tel" class="form-control mb-3" id="telefone" placeholder="(71) 99999-9999" maxlength="15" autocomplete="tel" required>
+  <label for="servico" class="form-label">Serviço</label><select class="form-select mb-3" id="servico" required><option value="">Carregando serviços...</option></select>
+  <label for="data" class="form-label">Data</label><input type="date" class="form-control mb-3" id="data" required>
+  <label for="horario" class="form-label">Horário</label><select class="form-select mb-3" id="horario" required disabled><option value="">Selecione primeiro a data</option></select>
+  <p id="resumoValor" class="help mb-3">Selecione um serviço para ver o valor.</p>
+  <div id="mensagem" class="alert d-none" role="status"></div><button id="btnAgendar" class="btn btn-custom w-100 py-2" type="submit">Confirmar agendamento</button>
+</form></div></main>
+<footer><p class="mb-1">Atendimentos de terça a sábado, das 08h às 17h</p><a href="https://wa.me/5571993467611" target="_blank" rel="noopener">Fale conosco no WhatsApp</a></footer>
 <script>
-$(document).ready(function () {
-
-  // =========================
-  // 📞 MÁSCARA DE TELEFONE (SEM PLUGIN)
-  // =========================
-  function formatarTelefone(v) {
-    v = v.replace(/\D/g, ""); // só números
-
-    if (v.length > 11) v = v.substring(0, 11);
-
-    if (v.length <= 10) {
-      v = v.replace(/(\d{2})(\d)/, "($1) $2");
-      v = v.replace(/(\d{4})(\d)/, "$1-$2");
-    } else {
-      v = v.replace(/(\d{2})(\d)/, "($1) $2");
-      v = v.replace(/(\d{5})(\d)/, "$1-$2");
-    }
-
-    return v;
-  }
-
-  $('#telefone').on('input', function () {
-    this.value = formatarTelefone(this.value);
-  });
-
-  // =========================
-  // 🔥 CARREGAR SERVIÇOS
-  // =========================
-  async function carregarServicos() {
-    const select = $('#servico');
-
-    try {
-      const snapshot = await db.collection('servicos')
-        .where('ativo', '==', true)
-        .get();
-
-      select.empty().append('<option value="">Selecione</option>');
-
-      if (snapshot.empty) {
-        select.append('<option value="">Nenhum serviço disponível</option>');
-        return;
-      }
-
-      snapshot.forEach(doc => {
-        const s = doc.data();
-
-        select.append(
-          `<option value="${s.nome} - R$ ${s.valor}">
-            ${s.nome} - R$ ${s.valor}
-          </option>`
-        );
-      });
-
-    } catch (e) {
-      console.error("Erro ao carregar serviços:", e);
-      select.html('<option>Erro ao carregar serviços</option>');
-    }
-  }
-
-  // =========================
-  // 🔥 CARREGAR HORÁRIOS
-  // =========================
-  $('#data').on('change', async function () {
-    const data = $(this).val();
-    const select = $('#horario');
-
-    select.html('<option>Carregando...</option>');
-
-    if (!data) return;
-
-    try {
-      const agendaDoc = await db.collection('agenda').doc(data).get();
-
-      if (!agendaDoc.exists) {
-        select.html('<option>Sem horários</option>');
-        return;
-      }
-
-      const agenda = agendaDoc.data();
-
-      const snapshot = await db.collection('agendamentos')
-        .where('data', '==', data)
-        .get();
-
-      const ocupados = snapshot.docs.map(doc => doc.data().horario);
-
-      const livres = (agenda.horarios || []).filter(h =>
-        !(agenda.bloqueados || []).includes(h) &&
-        !ocupados.includes(h)
-      );
-
-      select.empty();
-
-      if (livres.length === 0) {
-        select.append('<option>Sem horários disponíveis</option>');
-        return;
-      }
-
-      select.append('<option value="">Selecione</option>');
-
-      livres.forEach(h => {
-        select.append(`<option value="${h}">${h}</option>`);
-      });
-
-    } catch (e) {
-      console.error("Erro ao carregar horários:", e);
-      select.html('<option>Erro ao carregar horários</option>');
-    }
-  });
-
-  // =========================
-  // 🚀 AGENDAR
-  // =========================
-  $('#formAgendamento').on('submit', async function (e) {
-    e.preventDefault();
-
-    const nome = $('#nome').val();
-    const telefone = $('#telefone').val();
-    const servico = $('#servico').val();
-    const data = $('#data').val();
-    const horario = $('#horario').val();
-
-    if (!nome || !telefone || !servico || !data || !horario) {
-      alert('Preencha tudo');
-      return;
-    }
-
-    const check = await db.collection('agendamentos')
-      .where('data', '==', data)
-      .where('horario', '==', horario)
-      .get();
-
-    if (!check.empty) {
-      alert('Horário já ocupado');
-      return;
-    }
-
-    await db.collection('agendamentos').add({
-      nome,
-      telefone,
-      servico,
-      data,
-      horario,
-      status: "agendado",
-      criadoEm: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    alert('Agendamento realizado!');
-    this.reset();
-    $('#horario').html('<option value="">Selecione</option>');
-  });
-
-  carregarServicos();
-
-});
-</script>
-
-</body>
-</html>
+(function(){
+ const $=id=>document.getElementById(id);let servicos=[];
+ const money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+ function msg(text,type='info'){const el=$('mensagem');el.textContent=text;el.className='alert alert-'+type;}
+ function formatPhone(v){v=v.replace(/\D/g,'').slice(0,11);if(v.length>10)return v.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3').replace(/-$/,'');if(v.length>6)return v.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3').replace(/-$/,'');if(v.length>2)return v.replace(/^(\d{2})(\d+)/,'($1) $2');return v;}
+ $('telefone').addEventListener('input',e=>e.target.value=formatPhone(e.target.value));
+ const now=new Date();const localDate=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);$('data').min=localDate;
+ async function loadServices(){try{const snap=await db.collection('servicos').where('ativo','==',true).get();servicos=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(a.nome).localeCompare(String(b.nome),'pt-BR'));const s=$('servico');s.replaceChildren(new Option('Selecione um serviço',''));servicos.forEach(x=>s.add(new Option(`${x.nome} — ${money(x.valor)}`,x.id)));if(!servicos.length)s.add(new Option('Nenhum serviço disponível',''));}catch(e){console.error(e);$('servico').replaceChildren(new Option('Não foi possível carregar os serviços',''));msg('Não foi possível carregar os serviços. Tente novamente mais tarde.','danger');}}
+ function updatePrice(){const s=servicos.find(x=>x.id===$('servico').value);$('resumoValor').textContent=s?`Valor do serviço: ${money(s.valor)}. Pagamento combinado diretamente no atendimento.`:'Selecione um serviço para ver o valor.';}
+ $('servico').addEventListener('change',updatePrice);
+ $('data').addEventListener('change',async()=>{const data=$('data').value;const s=$('horario');s.disabled=true;s.replaceChildren(new Option('Carregando horários...',''));if(!data)return;try{const agendaDoc=await db.collection('agenda').doc(data).get();if(!agendaDoc.exists){s.replaceChildren(new Option('Sem horários cadastrados para esta data',''));return;}const agenda=agendaDoc.data();const snap=await db.collection('agendamentos').where('data','==',data).get();const ocupados=snap.docs.filter(d=>!['cancelado','cancelada'].includes(String(d.data().status||'').toLowerCase())).map(d=>d.data().horario);const livres=(agenda.horarios||[]).filter(h=>!(agenda.bloqueados||[]).includes(h)&&!ocupados.includes(h));s.replaceChildren(new Option(livres.length?'Selecione um horário':'Sem horários disponíveis',''));livres.forEach(h=>s.add(new Option(h,h)));s.disabled=false;}catch(e){console.error(e);s.replaceChildren(new Option('Não foi possível carregar os horários',''));msg(e.message||'Erro ao consultar a agenda.','danger');}});
+ $('formAgendamento').addEventListener('submit',async e=>{e.preventDefault();const btn=$('btnAgendar');const nome=$('nome').value.trim();const telefone=$('telefone').value.trim();const servicoId=$('servico').value;const data=$('data').value;const horario=$('horario').value;const servico=servicos.find(x=>x.id===servicoId);if(nome.length<2||telefone.replace(/\D/g,'').length<10||!servico||!data||!horario){msg('Confira os dados e preencha todos os campos.','warning');return;}btn.disabled=true;btn.textContent='Salvando agendamento...';try{const check=await db.collection('agendamentos').where('data','==',data).where('horario','==',horario).get();const ocupado=check.docs.some(d=>!['cancelado','cancelada'].includes(String(d.data().status||'').toLowerCase()));if(ocupado)throw new Error('Este horário acabou de ser reservado. Escolha outro horário.');const agendaDoc=await db.collection('agenda').doc(data).get();if(!agendaDoc.exists||(agendaDoc.data().bloqueados||[]).includes(horario)||!(agendaDoc.data().horarios||[]).includes(horario))throw new Error('Este horário não está mais disponível. Atualize a lista e tente novamente.');await db.collection('agendamentos').add({nome,telefone,servico:`${servico.nome} - ${money(servico.valor)}`,servicoId,valorServico:Number(servico.valor),data,horario,status:'agendado',paymentStatus:'nao_aplicavel',paymentMode:'presencial',criadoEm:firebase.firestore.FieldValue.serverTimestamp()});msg('Agendamento realizado! A equipe combinará o pagamento diretamente com você.','success');$('formAgendamento').reset();$('data').min=localDate;$('horario').replaceChildren(new Option('Selecione primeiro a data',''));$('horario').disabled=true;updatePrice();}catch(err){console.error(err);msg(err.message||'Não foi possível criar o agendamento. Tente novamente.','danger');}finally{btn.disabled=false;btn.textContent='Confirmar agendamento';}});
+ loadServices();
+})();
+</script></body></html>

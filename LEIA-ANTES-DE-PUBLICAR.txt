@@ -1,0 +1,9 @@
+VERSAO ESTATICA PARA FIREBASE SPARK
+
+Esta versao nao usa Cloud Functions nem Mercado Pago. Os agendamentos sao gravados diretamente na colecao agendamentos do Firestore, e o pagamento fica combinado presencialmente.
+
+NAO publique firestore.rules, firebase.json ou a pasta functions nesta etapa. Preserve as regras atuais do Firestore.
+
+ATENCAO: o Firestore atual exige custom claim admin == true para leitura/alteracao administrativa. O login do painel verifica tambem o e-mail andreataidenails@gmail.com, mas isso nao concede a claim. Se o painel apresentar PERMISSION_DENIED, nao altere as regras sem revisar a autenticacao/claim primeiro.
+
+Limite tecnico: a verificacao de horario livre feita pelo navegador nao e atomica. Duas pessoas podem tentar reservar o mesmo horario quase simultaneamente. A protecao robusta contra dupla reserva sera implementada quando houver backend confiavel (Cloud Functions).
